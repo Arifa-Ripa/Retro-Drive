@@ -11,7 +11,7 @@ public class Enemy {
     private Texture texture;
     private Rectangle bounds;
     private Random random;
-    private float speed;
+    //private float speed;
 
     public Enemy(Texture texture){
         this.texture = texture;
@@ -28,7 +28,9 @@ public class Enemy {
         return bounds;
     }
 
-    public void update(){
+    public void update(float speed){
+
+
         bounds.y -= speed;
         if(bounds.y < - 200){
             resetPosition();
@@ -36,7 +38,9 @@ public class Enemy {
     }
 
     private void resetPosition(){
-        bounds = new Rectangle(70 + random.nextInt(3) * 220, 800 + (random.nextInt(5) + 1) * 200, 95, 181);
-        speed = 5;
+        bounds = new Rectangle(70 + random.nextInt(3) * 220, 800 +
+            (random.nextInt(5) + 2) * 230, 95, 181);
+
+
     }
 }

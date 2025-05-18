@@ -2,6 +2,7 @@ package com.badlogic.carRacing;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,7 +20,8 @@ public class Racing extends ApplicationAdapter {
     private long StartTime;
     private int Score ;
     private boolean isGameOver;
-    final float ScrollSpeed = 200;
+    float ScrollSpeed = 200;
+    float EnemySpeed = 5;
     private float road1, road2;
 
 
@@ -45,10 +47,10 @@ public class Racing extends ApplicationAdapter {
         playerCar = new PlayerCar(playerTexture);
         enemyCar = new Array<>();
 
-        road1 = 0;
-        road2 = roadTexture.getHeight();
+        road = new Road(roadTexture, ScrollSpeed);
 
         isGameOver = false;
+
 
         for(int i = 0; i < 3; i++){
             enemyCar.add(new Enemy(enemyTexture));
@@ -66,32 +68,36 @@ public class Racing extends ApplicationAdapter {
         batch.begin();
 
 
+
         if(!isGameOver) {
 
             long currentTime = TimeUtils.millis();
             if((currentTime - StartTime) / 100 > 2) {
-                Score++;
+                if (Score < 50) {
+                    Score++;
+
+                } else if (Score < 200 ) {
+                    Score += 3;
+                    ScrollSpeed = 220;
+                    EnemySpeed = 7;
+
+                } else{
+                    Score += 5;
+                    ScrollSpeed = 250;
+                    EnemySpeed = 8;
+                }
+
                 StartTime = currentTime;
             }
 
-
-            float delta = Gdx.graphics.getDeltaTime();
-            road1 -= ScrollSpeed * delta;
-            road2 -= ScrollSpeed * delta;
-
-            if (road1 + roadTexture.getHeight() <= 0) {
-                road1 = road2 + roadTexture.getHeight();
-            }
-            if (road2 + roadTexture.getHeight() <= 0) {
-                road2 = road1 + roadTexture.getHeight();
-            }
+            road.update(ScrollSpeed);
 
 
 
             playerCar.update();
 
             for (Enemy enemy : enemyCar) {
-                enemy.update();
+                enemy.update(EnemySpeed);
 
                 if (playerCar.collision(enemy)) {
                     System.out.println("GAME OVER!");
@@ -100,14 +106,16 @@ public class Racing extends ApplicationAdapter {
             }
         }
 
-        batch.draw(roadTexture, 0, road1, 700, 800);
-        batch.draw(roadTexture, 0, road2, 700, 800);
+        road.draw(batch);
 
-        playerCar.draw(batch);
+
 
         for (Enemy enemy: enemyCar){
             enemy.draw(batch);
         }
+
+
+        playerCar.draw(batch);
 
         font.getData().setScale(2, 2);
         font.setColor(1f, 1f, 1f, 1f);
@@ -118,11 +126,10 @@ public class Racing extends ApplicationAdapter {
             font.getData().setScale(2, 2);
             font.setColor(1f, 1f, 1f, 1f);
             font.draw(batch, "GAME OVER!", 260, 400);
+            font.draw(batch, "PRESS ENTER TO RESTART",160, 360);
+
+            if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER))  restart();
         }
-
-
-
-
 
 
 
@@ -130,8 +137,29 @@ public class Racing extends ApplicationAdapter {
         batch.end();
     }
 
+    public void restart(){
+
+        isGameOver = false;
+        StartTime = TimeUtils.millis();
+        Score = 0;
+        ScrollSpeed = 200;
+        EnemySpeed = 5;
+
+        playerCar = new PlayerCar(playerTexture);
+
+        enemyCar.clear();
+        for(int i = 0; i < 3; i++){
+            enemyCar.add(new Enemy(enemyTexture));
+        }
+
+        road = new Road(roadTexture, ScrollSpeed);
+
+
+    }
+
     @Override
     public void dispose() {
+
         roadTexture.dispose();
     }
 }
