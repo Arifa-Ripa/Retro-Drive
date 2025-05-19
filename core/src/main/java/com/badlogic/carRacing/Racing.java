@@ -20,9 +20,8 @@ public class Racing extends ApplicationAdapter {
     private long StartTime;
     private int Score ;
     private boolean isGameOver;
-    float ScrollSpeed = 200;
-    float EnemySpeed = 5;
-    private float road1, road2;
+    private float ScrollSpeed;
+    private float EnemySpeed;
 
 
     //objects
@@ -40,7 +39,9 @@ public class Racing extends ApplicationAdapter {
         camera.setToOrtho(false,700, 800);
         font = new BitmapFont();
         Score = 0;
-        StartTime = TimeUtils.millis();
+        ScrollSpeed = 200;
+        EnemySpeed = 5;
+
 
 
 
@@ -49,12 +50,15 @@ public class Racing extends ApplicationAdapter {
 
         road = new Road(roadTexture, ScrollSpeed);
 
-        isGameOver = false;
+        isGameOver = true;
+
 
 
         for(int i = 0; i < 3; i++){
             enemyCar.add(new Enemy(enemyTexture));
         }
+
+
     }
 
     @Override
@@ -67,6 +71,21 @@ public class Racing extends ApplicationAdapter {
 
         batch.begin();
 
+
+        //start button
+        if(isGameOver && Score == 0){
+
+            road.draw(batch);
+            font.getData().setScale(2, 2);
+            font.setColor(1f, 1f, 1f, 1f);
+            font.draw(batch, "START GAME", 258, 400);
+            if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                isGameOver = false;
+                StartTime = TimeUtils.millis();
+            }
+            batch.end();
+            return;
+        }
 
 
         if(!isGameOver) {

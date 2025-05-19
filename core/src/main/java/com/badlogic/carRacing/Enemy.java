@@ -11,7 +11,6 @@ public class Enemy {
     private Texture texture;
     private Rectangle bounds;
     private Random random;
-    //private float speed;
 
     public Enemy(Texture texture){
         this.texture = texture;
