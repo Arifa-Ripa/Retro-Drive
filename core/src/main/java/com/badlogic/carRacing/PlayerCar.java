@@ -20,11 +20,17 @@ public class PlayerCar{
     }
 
     public void update(){
-        if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && bounds.x > 70)
-            bounds.x -= 220;
 
-        else if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && bounds.x < 500)
+        if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && bounds.x > 70){
+             bounds.x -= 220;
+        }
+
+
+        else if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && bounds.x < 500) {
+
             bounds.x += 220;
+        }
+
 
     }
 

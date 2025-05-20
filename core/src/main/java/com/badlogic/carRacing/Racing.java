@@ -43,15 +43,12 @@ public class Racing extends ApplicationAdapter {
         EnemySpeed = 5;
 
 
-
-
         playerCar = new PlayerCar(playerTexture);
         enemyCar = new Array<>();
 
         road = new Road(roadTexture, ScrollSpeed);
 
-        isGameOver = true;
-
+        isGameOver = true;   //START screen appears first
 
 
         for(int i = 0; i < 3; i++){
@@ -115,6 +112,7 @@ public class Racing extends ApplicationAdapter {
 
             playerCar.update();
 
+
             for (Enemy enemy : enemyCar) {
                 enemy.update(EnemySpeed);
 
@@ -140,6 +138,8 @@ public class Racing extends ApplicationAdapter {
         font.setColor(1f, 1f, 1f, 1f);
         font.draw(batch, "Score : " + Score, 40, 740);
 
+
+        //GameOver Screen
         if(isGameOver){
 
             font.getData().setScale(2, 2);
